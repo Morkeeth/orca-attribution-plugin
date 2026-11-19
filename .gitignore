@@ -1,0 +1,9 @@
+node_modules/
+.orca/
+evidence/
+PLAN.md
+WORKSPACE-FEED-PROPOSAL.md
+CATALOG-ENTRY.json
+RELEASE-CATALOG.md
+STAGED-PRS.md
+catalog-entry.diff

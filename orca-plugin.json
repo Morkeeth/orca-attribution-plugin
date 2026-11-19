@@ -1,0 +1,54 @@
+{
+  "manifestVersion": 2,
+  "id": "token-attribution",
+  "name": "Attribution",
+  "version": "0.3.0",
+  "description": "Logged Claude Code and Codex tokens by project, read from local logs. No network.",
+  "engines": {
+    "orca": ">=1.4.246"
+  },
+  "execution": "trusted-worker",
+  "pluginApi": 1,
+  "main": "src/worker.ts",
+  "contributes": {
+    "panels": [
+      {
+        "id": "attribution",
+        "title": "Attribution",
+        "icon": "blocks",
+        "entry": "src/panel.tsx",
+        "ui": "components"
+      }
+    ],
+    "events": [
+      {
+        "on": "workspace.created"
+      },
+      {
+        "on": "workspace.removed"
+      }
+    ],
+    "settings": [
+      {
+        "key": "hiddenProjects",
+        "title": "Hidden project names (comma-separated)",
+        "type": "string",
+        "default": ""
+      }
+    ]
+  },
+  "capabilities": [
+    {
+      "kind": "workspace:read"
+    },
+    {
+      "kind": "settings:own"
+    }
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/Morkeeth/orca-attribution-plugin",
+  "cover": {
+    "path": "docs/cover.png",
+    "alt": "Attribution for Orca with sample project names and token counts"
+  }
+}
