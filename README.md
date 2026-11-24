@@ -6,7 +6,7 @@ Orca already shows every agent and worktree in one place. Attribution adds the p
 
 ## Install
 
-Requires Orca 1.4.246 or later.
+Requires Orca 1.4.246 or later. On 1.4.246 the panel counts tokens but cannot name projects by Orca workspace; 1.4.247 adds that.
 
 ```sh
 orca plugin install Morkeeth/orca-attribution-plugin --json

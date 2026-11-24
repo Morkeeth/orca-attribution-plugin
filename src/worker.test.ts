@@ -6,8 +6,8 @@ import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 
 // A minimal worker API: the snapshot reads only workspace.list and one setting.
-const fakeOrca = (workspaces: unknown[], settings: Record<string, string> = {}) => ({
-  host: {call: async () => ({workspaces, truncated: false})},
+const fakeOrca = (workspaces: unknown[], settings: Record<string, string> = {}, methods = ['workspace.list']) => ({
+  host: {call: async () => ({workspaces, truncated: false}), has: (m: string) => methods.includes(m)},
   settings: {get: async (key: string) => settings[key] ?? ''},
   panels: {post: () => {}}
 }) as any
@@ -50,5 +50,14 @@ test('hidden names move usage to unassigned and drop the workspace row; exact fo
     const mixed = await worker.snapshot(fakeOrca(ws.slice(0, 1), {hiddenProjects: 'client'}), undefined, new LocalCollector(home))
     assert.deepEqual(mixed.workspaces, [{name: 'alpha', tokens: 100}])
     assert.equal(mixed.unknown, 57)
+  } finally {await rm(home, {recursive: true, force: true})}
+})
+
+test('an Orca without workspace.list still counts usage and says why workspaces are missing', async () => {
+  const home = await mkdtemp(join(tmpdir(), 'attribution-old-orca-'))
+  try {
+    const d = await worker.snapshot(fakeOrca([], {}, []), undefined, new LocalCollector(home))
+    assert.ok(d.issues.some(i => i.includes('Update Orca to 1.4.247')))
+    assert.ok(!d.issues.includes('Workspace metadata is unavailable.'))
   } finally {await rm(home, {recursive: true, force: true})}
 })

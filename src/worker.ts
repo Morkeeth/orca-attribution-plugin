@@ -19,12 +19,17 @@ export async function snapshot(orca: OrcaWorkerApi, request?: RangeRequest, loca
   const out: Snapshot = {readAt, period: 'Unavailable', state: 'unavailable', projects: [], unknown: null, harnesses: [], workspaces: [], issues: []}
 
   let workspaces: any[] = []
-  try {
-    const result = await orca.host.call('workspace.list')
-    workspaces = result.workspaces
-    if (result.truncated) out.issues.push('Orca returned a partial workspace list.')
-  } catch {
-    out.issues.push('Workspace metadata is unavailable.')
+  // workspace.list arrived in Orca 1.4.247; the manifest still allows 1.4.246.
+  if (orca.host.has && !orca.host.has('workspace.list')) {
+    out.issues.push('This Orca cannot list workspaces. Update Orca to 1.4.247 or later to name projects by workspace.')
+  } else {
+    try {
+      const result = await orca.host.call('workspace.list')
+      workspaces = result.workspaces
+      if (result.truncated) out.issues.push('Orca returned a partial workspace list.')
+    } catch {
+      out.issues.push('Workspace metadata is unavailable.')
+    }
   }
   let hidden: string[] = []
   try {

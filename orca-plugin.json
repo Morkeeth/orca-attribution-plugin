@@ -2,7 +2,7 @@
   "manifestVersion": 2,
   "id": "token-attribution",
   "name": "Attribution",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Logged Claude Code and Codex tokens by project, read from local logs. No network.",
   "engines": {
     "orca": ">=1.4.246"
